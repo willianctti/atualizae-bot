@@ -84,6 +84,19 @@ app.get('/healthcheck', (req, res) => {
   res.send('OK');
 });
 
+// Função para fazer self-ping
+async function keepAlive() {
+  try {
+    const url = process.env.APP_URL || `http://localhost:${port}`;
+    await axios.get(`${url}/healthcheck`);
+    console.log('Self-ping executado com sucesso');
+  } catch (error) {
+    console.error('Erro no self-ping:', error.message);
+  }
+}
+
+schedule.scheduleJob('*/4 * * * *', keepAlive);
+
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
