@@ -48,6 +48,7 @@ async function fetchNews() {
 }
 
 async function postNewsTweet() {
+  console.log('Iniciando tentativa de postagem de tweet...');
   const client = new TwitterApi({
     appKey: process.env.CONSUMER_KEY,
     appSecret: process.env.CONSUMER_SECRET,
@@ -69,10 +70,15 @@ async function postNewsTweet() {
     }
     
     const tweetContent = `${description}\n\n${newsItem.link}`;
+    console.log('Tentando postar tweet:', tweetContent);
     
     const tweet = await client.v2.tweet(tweetContent);
+    console.log('Tweet postado com sucesso:', tweet);
   } catch (error) {
     console.error('Erro ao postar tweet:', error);
+    if (error.response) {
+      console.error('Detalhes da resposta:', error.response.data);
+    }
   }
 }
 
