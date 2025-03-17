@@ -49,6 +49,18 @@ async function fetchNews() {
 
 async function postNewsTweet() {
   console.log('Iniciando tentativa de postagem de tweet...');
+  
+  // Verificar se já postamos nas últimas 24 horas
+  const now = new Date();
+  const lastPostTime = global.lastPostTime || 0;
+  const hoursSinceLastPost = (now - lastPostTime) / (1000 * 60 * 60);
+  
+  // Se não se passaram pelo menos 1.5 horas desde o último post, pular
+  if (hoursSinceLastPost < 1.5) {
+    console.log('Aguardando intervalo mínimo entre posts (1.5 horas)');
+    return;
+  }
+
   const client = new TwitterApi({
     appKey: process.env.CONSUMER_KEY,
     appSecret: process.env.CONSUMER_SECRET,
@@ -74,6 +86,9 @@ async function postNewsTweet() {
     
     const tweet = await client.v2.tweet(tweetContent);
     console.log('Tweet postado com sucesso:', tweet);
+    
+    // Atualizar o timestamp do último post
+    global.lastPostTime = now;
   } catch (error) {
     console.error('Erro ao postar tweet:', error);
     if (error.response) {
