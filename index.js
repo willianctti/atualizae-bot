@@ -1,9 +1,13 @@
+import express from 'express';
 import { TwitterApi } from 'twitter-api-v2';
 import schedule from 'node-schedule';
 import dotenv from 'dotenv';
 import axios from 'axios';
 
 dotenv.config();
+
+const app = express();
+const port = process.env.PORT || 3000;
 
 const postedNewsIds = new Set();
 
@@ -72,6 +76,13 @@ async function postNewsTweet() {
   }
 }
 
-const job = schedule.scheduleJob('*/10 * * * *', postNewsTweet);
+app.get('/', (req, res) => {
+  res.send('Bot está rodando!');
+});
 
+app.listen(port, () => {
+  console.log(`Servidor rodando na porta ${port}`);
+});
+
+const job = schedule.scheduleJob('*/10 * * * *', postNewsTweet);
 postNewsTweet();
