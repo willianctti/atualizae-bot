@@ -87,7 +87,7 @@ app.get('/healthcheck', (req, res) => {
 // Função para fazer self-ping
 async function keepAlive() {
   try {
-    const url = process.env.APP_URL || `http://localhost:${port}`;
+    const url = 'https://atualizae-bot.onrender.com/';
     await axios.get(`${url}/healthcheck`);
     console.log('Self-ping executado com sucesso');
   } catch (error) {
