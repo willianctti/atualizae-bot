@@ -80,9 +80,13 @@ app.get('/', (req, res) => {
   res.send('Bot está rodando!');
 });
 
+app.get('/healthcheck', (req, res) => {
+  res.send('OK');
+});
+
 app.listen(port, () => {
   console.log(`Servidor rodando na porta ${port}`);
 });
 
-const job = schedule.scheduleJob('*/10 * * * *', postNewsTweet);
+const job = schedule.scheduleJob('*/5 * * * *', postNewsTweet);
 postNewsTweet();
